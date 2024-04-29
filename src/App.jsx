@@ -7,7 +7,7 @@ import {
   json,
 } from "react-router-dom";
 import Home from "./pages/home/Home";
-import Order from "./pages/order/Order";
+
 import Cart from "./pages/cart/Cart";
 import Dashboard from "./pages/admin/dashbord/DashBord";
 import NoPage from "./pages/nopages/Nopages";
@@ -19,6 +19,7 @@ import AddProduct from "./pages/admin/page/AddProduct";
 import UpdateProduct from "./pages/admin/page/UpdateProduct";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AllProduct from "./pages/AllProduct/AllProduct";
 
 function App() {
   return (
@@ -27,14 +28,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route
-              path="/order"
-              element={
-                <ProtectedRoute>
-                  <Order />
-                </ProtectedRoute>
-              }
-            />
+            
             <Route path="/cart" element={<Cart />} />
             <Route
               path="/dashboard"
@@ -63,6 +57,7 @@ function App() {
                 </ProtectedRouteForAdmin>
               }
             />
+            <Route path="/allproducts" element={<AllProduct/>}/ >
             <Route path="/*" element={<NoPage />} />
           </Routes>
           <ToastContainer />

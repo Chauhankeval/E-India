@@ -77,15 +77,7 @@ const Navbar = () => {
                   >
                     All Products
                   </Link>
-                  <div className="flow-root">
-                    {user ? <Link
-                      to={"/order"}
-                      style={{ color: mode === "dark" ? "white" : "" }}
-                      className="-m-2 block p-2 font-medium text-gray-900"
-                    >
-                      Order
-                    </Link> : ""}
-                  </div>
+                
 
                   <div className="flow-root">
                     {user?.user?.email === "kevalachauhan2017@gmail.com" ? (
@@ -184,7 +176,7 @@ const Navbar = () => {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6"
+                  className="w-6 h-6"
                 >
                   <path
                     stroke-linecap="round"
@@ -202,7 +194,7 @@ const Navbar = () => {
                       className=" text-2xl font-bold text-black  px-2 py-1 rounded"
                       style={{ color: mode === "dark" ? "white" : "" }}
                     >
-                      E-Bharat
+                       Classy Cloth
                     </h1>
                   </div>
                 </Link>
@@ -217,13 +209,7 @@ const Navbar = () => {
                   >
                     All Products
                   </Link>
-                 { user ? <Link
-                    to={"/order"}
-                    className="text-sm font-medium text-gray-700 "
-                    style={{ color: mode === "dark" ? "white" : "" }}
-                  >
-                    Order
-                  </Link> : ""}
+             
                   {user?.user?.email === "kevalachauhan2017@gmail.com" ? (
                     <Link
                       to={"/dashboard"}

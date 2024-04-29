@@ -135,10 +135,10 @@ const MyState = (props) => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     GetProductData();
-    getOrderData()
+    getOrderData();
+    getUserNameData()
   }, []);
 
 
@@ -162,6 +162,38 @@ const MyState = (props) => {
     }
   }
 
+// get the user name and set name in the setuser state and export as user 
+
+  const [user , setUser] = useState([])
+
+
+  const getUserNameData = async () =>{
+    setLoading(true)
+    try {
+      const result = await getDocs(collection(fireDB, "users"))
+      const usersArray = [];
+      result.forEach((doc) => {
+        usersArray.push(doc.data());
+        setLoading(false)
+      });
+      setUser(usersArray);
+      console.log(usersArray)
+      setLoading(false);
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    GetProductData();
+    getOrderData();
+    getUserNameData()
+  }, []);
+
+  const [searchkey, setSearchkey] = useState('')
+  const [filterType, setFilterType] = useState('')
+  const [filterPrice, setFilterPrice] = useState('')
 
   return (
     <MyContext.Provider
@@ -178,7 +210,11 @@ const MyState = (props) => {
         edithandle,
         updateProduct,
         deleteProduct,
-        order
+        order,
+        user,
+        searchkey, setSearchkey,
+        filterType, setFilterType,
+        filterPrice, setFilterPrice
       }}
     >
       {props.children}
