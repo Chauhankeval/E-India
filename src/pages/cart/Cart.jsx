@@ -15,7 +15,6 @@ function Cart() {
   const dispatch = useDispatch();
 
   const cartItems = useSelector((state) => state.cart);
-  console.log(cartItems);
   
   const deleteCart = (itemId) => {
     dispatch(deleteFromCart(itemId));
@@ -243,7 +242,7 @@ function Cart() {
               setAddress={setAddress}
               setPincode={setPincode}
               setPhoneNumber={setPhoneNumber}
-              buyNow={ buyNow}
+              buyNow={buyNow}
             />
           </div>
         </div>
