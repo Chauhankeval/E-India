@@ -1,33 +1,30 @@
-import React from "react";
-import { Fragment, useContext, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import React, { Fragment, useContext, useState } from "react";
+import myContext from "../../context/data/MyContext";
 import { BsFillCloudSunFill } from "react-icons/bs";
 import { FiSun } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { Dialog, Transition } from "@headlessui/react";
 import { RxCross2 } from "react-icons/rx";
-import MyContext from "../../context/data/MyContext";
-import KevalImg from "../Navbar/keval.jpg.jpeg";
 import { useSelector } from "react-redux";
+import KevalImg from "../Navbar/keval.jpg.jpeg";
 
-const Navbar = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const cartItems = useSelector((state) => state.cart)
-
-  const context = useContext(MyContext);
+function Navbar() {
+  const context = useContext(myContext);
   const { mode, toggleMode } = context;
 
-  // This State use for mobile menu
   const [open, setOpen] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const logout = () => {
     localStorage.clear("user");
     window.location.href = "/login";
   };
 
+  const cartItems = useSelector((state) => state.cart);
+
   return (
     <div className="bg-white sticky top-0 z-50">
-      {/* mobile menu  */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-40 lg:hidden" onClose={setOpen}>
           <Transition.Child
@@ -77,10 +74,23 @@ const Navbar = () => {
                   >
                     All Products
                   </Link>
-                
 
-                  <div className="flow-root">
-                    {user?.user?.email === "kevalachauhan2017@gmail.com" ? (
+                  {user ? (
+                    <div className="flow-root">
+                      <Link
+                        to={"/order"}
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                        className="-m-2 block p-2 font-medium text-gray-900"
+                      >
+                        Order
+                      </Link>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {user?.user?.email === "kevalachauhan2017@gmail.com" ? (
+                    <div className="flow-root">
                       <Link
                         to={"/dashboard"}
                         className="-m-2 block p-2 font-medium text-gray-900"
@@ -88,20 +98,32 @@ const Navbar = () => {
                       >
                         admin
                       </Link>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
 
-                  <div className="flow-root">
-                    { user ? <a
-                      onClick={logout}
-                      className="-m-2 block p-2 font-medium text-gray-900 cursor-pointer"
-                      style={{ color: mode === "dark" ? "white" : "" }}
-                    >
-                      Logout
-                    </a> : ""}
-                  </div>
+                  {user ? (
+                    <div className="flow-root">
+                      <a
+                        onClick={logout}
+                        className="-m-2 block p-2 font-medium text-gray-900 cursor-pointer"
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                      >
+                        Logout
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="flow-root">
+                      <Link
+                        to={"/signup"}
+                        className="-m-2 block p-2 font-medium text-gray-900 cursor-pointer"
+                        style={{ color: mode === "dark" ? "white" : "" }}
+                      >
+                        Signup
+                      </Link>
+                    </div>
+                  )}
                   <div className="flow-root">
                     <Link
                       to={"/"}
@@ -138,7 +160,6 @@ const Navbar = () => {
         </Dialog>
       </Transition.Root>
 
-      {/* desktop  */}
       <header className="relative bg-white">
         <p
           className="flex h-10 items-center justify-center bg-pink-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8"
@@ -174,16 +195,10 @@ const Navbar = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-
                   stroke="currentColor"
                   className="w-6 h-6"
                 >
-                  <path
-                    
-                   
-                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                  />
+                  <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
               </button>
 
@@ -195,7 +210,7 @@ const Navbar = () => {
                       className=" text-2xl font-bold text-black  px-2 py-1 rounded"
                       style={{ color: mode === "dark" ? "white" : "" }}
                     >
-                       Classy Cloth
+                      Classy Cloth
                     </h1>
                   </div>
                 </Link>
@@ -210,7 +225,24 @@ const Navbar = () => {
                   >
                     All Products
                   </Link>
-             
+                  {user ? (
+                    <Link
+                      to={"/order"}
+                      className="text-sm font-medium text-gray-700 "
+                      style={{ color: mode === "dark" ? "white" : "" }}
+                    >
+                      Order
+                    </Link>
+                  ) : (
+                    <Link
+                      to={"/signup"}
+                      className="text-sm font-medium text-gray-700 "
+                      style={{ color: mode === "dark" ? "white" : "" }}
+                    >
+                      Signup
+                    </Link>
+                  )}
+
                   {user?.user?.email === "kevalachauhan2017@gmail.com" ? (
                     <Link
                       to={"/dashboard"}
@@ -223,13 +255,17 @@ const Navbar = () => {
                     ""
                   )}
 
-                 {user ? <a
-                    onClick={logout}
-                    className="text-sm font-medium text-gray-700 cursor-pointer  "
-                    style={{ color: mode === "dark" ? "white" : "" }}
-                  >
-                    Logout
-                  </a> : ""}
+                  {user ? (
+                    <a
+                      onClick={logout}
+                      className="text-sm font-medium text-gray-700 cursor-pointer  "
+                      style={{ color: mode === "dark" ? "white" : "" }}
+                    >
+                      Logout
+                    </a>
+                  ) : (
+                    ""
+                  )}
                 </div>
 
                 <div className="hidden lg:ml-8 lg:flex">
@@ -257,10 +293,8 @@ const Navbar = () => {
                   </a>
                 </div>
 
-                {/* Search */}
                 <div className="flex lg:ml-6">
                   <button className="" onClick={toggleMode}>
-                    {/* <MdDarkMode size={35} style={{ color: mode === 'dark' ? 'white' : '' }} /> */}
                     {mode === "light" ? (
                       <FiSun className="" size={30} />
                     ) : "dark" ? (
@@ -282,14 +316,10 @@ const Navbar = () => {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      strokeWidth={1.5}
                       stroke="currentColor"
                       className="w-6 h-6"
                     >
-                      <path
-                        
-                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                      />
+                      <path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                     </svg>
 
                     <span
@@ -308,6 +338,6 @@ const Navbar = () => {
       </header>
     </div>
   );
-};
+}
 
 export default Navbar;

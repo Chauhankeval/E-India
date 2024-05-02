@@ -7,14 +7,9 @@ import Track from "../../components/track/Track";
 import Testimonial from "../../components/testimonial/Testimonial";
 import ProductCard from "../../components/productCard/ProductCard";
 
-
 const Home = () => {
-
-   
- 
   return (
     <Layout>
-     
       <HeroSection />
       <Filter />
       <ProductCard />

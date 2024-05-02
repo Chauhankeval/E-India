@@ -7,6 +7,7 @@ import { deleteFromCart } from "../../redux/CartSlice";
 import { toast } from "react-toastify";
 import { addDoc, collection } from "firebase/firestore";
 import { fireDB } from "../../firebase/FirebaseConfigu";
+
 function Cart() {
   const context = useContext(myContext);
   const { mode } = context;
@@ -15,10 +16,12 @@ function Cart() {
 
   const cartItems = useSelector((state) => state.cart);
   console.log(cartItems);
+  
   const deleteCart = (itemId) => {
     dispatch(deleteFromCart(itemId));
     toast.success("Delete Cart Successfully");
   };
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
@@ -41,77 +44,74 @@ function Cart() {
   const [pincode, setPincode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  // const buyNow = async () => {
+  const buyNow = async () => {
+    if (name === "" || address == "" || pincode == "" || phoneNumber == "") {
+      return toast.error("All fields are required", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+    const addressInfo = {
+      name,
+      address,
+      pincode,
+      phoneNumber,
+      date: new Date().toLocaleString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+    };
 
-  //   if (name === "" || address == "" || pincode == "" || phoneNumber == "") {
-  //     return toast.error("All fields are required", {
-  //       position: "top-center",
-  //       autoClose: 1000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "colored",
-  //     });
-  //   }
-  //   const addressInfo = {
-  //     name,
-  //     address,
-  //     pincode,
-  //     phoneNumber,
-  //     date: new Date().toLocaleString("en-US", {
-  //       month: "short",
-  //       day: "2-digit",
-  //       year: "numeric",
-  //     }),
-  //   };
+    var options = {
+      key: "rzp_test_wjvMKQA37II4cV",
+      key_secret: "rzp_test_wjvMKQA37II4cV",
+      amount: parseInt(grandTotal * 100),
+      currency: "INR",
+      order_receipt: "order_rcptid_" + name,
+      name: "E-Bharat",
+      description: "for testing purpose",
+      handler: function (response) {
+        toast.success("Payment Successful");
 
-  //   var options = {
-  //     key: "bfbdbsdfbab",
-  //     key_secret: "bzcbzxbfb",
-  //     amount: parseInt(grandTotal * 100),
-  //     currency: "INR",
-  //     order_receipt: "order_rcptid_" + name,
-  //     name: "E-Bharat",
-  //     description: "for testing purpose",
-  //     handler: function (response) {
-  //       console.log(response);
-  //       toast.success("Payment Successful");
+        const paymentId = response.razorpay_payment_id;
 
-  //       const paymentId = response.razorpay_payment_id;
+        // store in firebase
+        const orderInfo = {
+          cartItems,
+          addressInfo,
+          date: new Date().toLocaleString("en-US", {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+          }),
+          email: JSON.parse(localStorage.getItem("user")).user.email,
+          userid: JSON.parse(localStorage.getItem("user")).user.uid,
+          paymentId,
+        };
 
-  //       // store in firebase
-  //       const orderInfo = {
-  //         cartItems,
-  //         addressInfo,
-  //         date: new Date().toLocaleString("en-US", {
-  //           month: "short",
-  //           day: "2-digit",
-  //           year: "numeric",
-  //         }),
-  //         email: JSON.parse(localStorage.getItem("user")).user.email,
-  //         userid: JSON.parse(localStorage.getItem("user")).user.uid,
-  //         paymentId,
-  //       };
+        try {
+          const orderRef = collection(fireDB, "orders"); //Create collection in Firebase
+          addDoc(orderRef, orderInfo); //addd doc in firebase collection
+        } catch (error) {
+          console.log(error);
+        }
+      },
 
-  //       try {
-  //         const orderRef = collection(fireDB, "order"); //Create collection in Firebase
-  //         addDoc(orderRef, orderInfo); //addd doc in firebase collection
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     },
+      theme: {
+        color: "#3399cc",
+      },
+    };
 
-  //     theme: {
-  //       color: "#3399cc",
-  //     },
-  //   };
-
-  //   var pay = new window.Razorpay(options);
-  //   pay.open();
-  //   console.log(pay);
-  // };
+    var pay = new window.Razorpay(options);
+    pay.open();
+  };
   
   return (
     <Layout>
@@ -128,7 +128,7 @@ function Cart() {
             {cartItems.map((item) => (
               <div
                 key={item.id} // Assuming each item has a unique id
-                className="justify-between mb-6 rounded-lg border  drop-shadow-xl bg-white p-6  sm:flex  sm:justify-start"
+                className="justify-between mb-6 rounded-lg border drop-shadow-xl bg-white p-6 sm:flex sm:justify-start"
                 style={{
                   backgroundColor: mode === "dark" ? "rgb(32 33 34)" : "",
                   color: mode === "dark" ? "white" : "",
@@ -148,7 +148,7 @@ function Cart() {
                       {item.title}
                     </h2>
                     <h2
-                      className="text-sm  text-gray-900"
+                      className="text-sm text-gray-900"
                       style={{ color: mode === "dark" ? "white" : "" }}
                     >
                       {item.description}
@@ -173,7 +173,6 @@ function Cart() {
                       className="w-6 h-6"
                     >
                       <path
-                       
                         d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                       />
                     </svg>
@@ -235,7 +234,6 @@ function Cart() {
                 </p>
               </div>
             </div>
-            {/* <Modal  /> */}
             <Modal
               name={name}
               address={address}
@@ -245,7 +243,7 @@ function Cart() {
               setAddress={setAddress}
               setPincode={setPincode}
               setPhoneNumber={setPhoneNumber}
-              
+              buyNow={ buyNow}
             />
           </div>
         </div>

@@ -1,9 +1,9 @@
 import React from 'react'
-import Image from '../HeroSection/bg-jpg.jpg'
+import Image from '../HeroSection/22.jpg'
 function HeroSection() {
   return (
     <div>
-        <img className='h-[70vh] w-full' src={Image} alt="" />
+        <img className='h-[70vh] w-full bg-cover' src={Image} alt="" />
     </div>
   )
 }

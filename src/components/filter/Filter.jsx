@@ -15,10 +15,9 @@ function Filter() {
   } = context;
 
   return (
-    <div className=" container mx-auto px-4 mt-5 ">
+    <div className="container mx-auto px-4 mt-5">
       <div
-        className="p-5 rounded-lg bg-gray-100 drop-shadow-xl border border-gray-200
-"
+        className="p-5 rounded-lg bg-gray-100 drop-shadow-xl border border-gray-200"
         style={{
           backgroundColor: mode === "dark" ? "#282c34" : "",
           color: mode === "dark" ? "white" : "",
@@ -69,22 +68,26 @@ function Filter() {
                 color: mode === "dark" ? "white" : "",
               }}
             >
-              {product.map((item, index) => {
-                return <option key={index} value={item.category}>{item.category}</option>;
-              })}
+              {product.map((item, index) => (
+                <option key={index} value={item.category}>
+                  {item.category}
+                </option>
+              ))}
             </select>
             <select
               value={filterPrice}
               onChange={(e) => setFilterPrice(e.target.value)}
-              className="px-4 py-3 w-full rounded-md bg-gray-50 border-transparent outline-0  focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
+              className="px-4 py-3 w-full rounded-md bg-gray-50 border-transparent outline-0 focus:border-gray-500 focus:bg-white focus:ring-0 text-sm"
               style={{
                 backgroundColor: mode === "dark" ? "rgb(64 66 70)" : "",
                 color: mode === "dark" ? "white" : "",
               }}
             >
-              {product.map((item, index) => {
-                return <option key={index} value={item.price}>{item.price}</option>;
-              })}
+              {product.map((item, index) => (
+                <option key={index} value={item.price}>
+                  {item.price}
+                </option>
+              ))}
             </select>
           </div>
         </div>
